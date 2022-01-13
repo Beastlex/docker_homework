@@ -1,0 +1,20 @@
+FROM python:3.8.12-buster
+
+WORKDIR /app
+
+# Переменные окружения для избежания записи файлов .pyc и кэширования
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+  
+# Установка зависимостей
+RUN pip install --upgrade pip
+COPY ./requirements.txt /app/requirements.txt
+RUN pip install -r requirements.txt
+  
+# Копируем файлы проекта
+COPY . /app/
+
+EXPOSE 8000
+
+# Для локального тестирования подойдет development сервер
+CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000" ]

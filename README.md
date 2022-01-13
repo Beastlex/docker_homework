@@ -1,6 +1,7 @@
 # docker_homework
 # 1 Лекция
 Написать Dockerfile для frontend располагается в директории /frontend, собрать и запустить
+
 # Решение:
 В директории frontend создал Dockerfile. Коментировал в нем решения,
 которые принимал. 
@@ -14,8 +15,43 @@ docker run -p 8080:80 alex/testfront
 Написать Dockerfile для backend который располагается в директории /lib_catalog(для сборки контейнера необходимо использовать файл /lib_catalog/requirements.txt), для работы backend необходим postgresql, т.е. необходимо собрать 2 контейнера:
 1. backend
 2. postgresql
-
 Осуществить сетевые настройки, для работы связки backend и postgresql
+
+# Решение:
+Создадим сеть и volume для повторного исопьзования
+```
+docker network create -d bridge test-network
+docker volume create test-data
+```
+
+Соберем образ сервера БД и запустим в фоновом режиме
+```
+docker build -t alex/testfdb -f Dockerfile.postgresql .
+
+docker run -d -p 5432:5432 --network test-network \
+          -v test-data:/var/lib/postgresql/data \
+            --name database alex/testfdb
+```
+
+Соберем образ Django приложение и запустим development сервер в фоне
+```
+docker build -t alex/testback -f Dockerfile.django .
+docker run -d -p 8000:8000 --network test-network \
+          --name testback01 alex/testback01
+```
+
+Выполним миграцию БД
+```
+docker exec testback01 python manage.py migrate
+```
+
+Создадим администратора приложения
+```
+docker exec -it testback01 python manage.py createsuperuser
+```
+
+Админка будет доступна по адресу <SERVER>:8000
+
 # 3 Лекция
 Написать docker-compose.yaml, для всего проекта, собрать и запустить
 
