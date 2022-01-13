@@ -1,6 +1,15 @@
 # docker_homework
 # 1 Лекция
 Написать Dockerfile для frontend располагается в директории /frontend, собрать и запустить
+# Решение:
+В директории frontend создал Dockerfile. Коментировал в нем решения,
+которые принимал. 
+Запусал с помощью
+```
+docker build -t alex/testfront .
+docker run -p 8080:80 alex/testfront
+```
+
 # 2 Лекция
 Написать Dockerfile для backend который располагается в директории /lib_catalog(для сборки контейнера необходимо использовать файл /lib_catalog/requirements.txt), для работы backend необходим postgresql, т.е. необходимо собрать 2 контейнера:
 1. backend
