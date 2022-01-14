@@ -1,0 +1,92 @@
+version: '3.8'
+
+services:
+  reverseproxy:
+    build:
+      dockerfile: Dockerfile
+      context: ./traefik
+    networks:
+      - front-net
+    ports:
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    depends_on:
+      - frontend
+      - backend-django
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  frontend:
+    build:
+      dockerfile: Dockerfile
+      context: ./frontend
+    networks:
+      - front-net
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.router1.entrypoints=web
+      - traefik.http.routers.router1.rule=PathPrefix(`/`)
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  backend-django:
+    build:
+      dockerfile: Dockerfile.django
+      context: ./lib_catalog
+    networks:
+      - back-net
+      - front-net
+    depends_on:
+      - database
+      - migration
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.router0.entrypoints=web
+      - traefik.http.routers.router0.rule=PathPrefix(`/admin/`,`/api/v1/lib/`,) 
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+
+  migration:
+    build:
+      dockerfile: Dockerfile.django
+      context: ./lib_catalog
+    networks:
+      - back-net
+    command: ["python", "manage.py", "migrate"]
+    depends_on:
+      - database
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: none
+
+  database:
+    env_file: environment.env
+    image: postgres:14.1-alpine
+    networks:
+      - back-net
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    deploy:
+      replicas: 1
+      restart_policy: 
+        condition: on-failure
+
+
+networks:
+  front-net:
+  back-net:
+
+volumes:
+  postgres_data:
