@@ -55,6 +55,19 @@ docker exec -it testback01 python manage.py createsuperuser
 # 3 Лекция
 Написать docker-compose.yaml, для всего проекта, собрать и запустить
 
+# Решение:
+Создал environment.env и docker-compose.yaml, в котором реализована 
+сборка образов. В проекте фронтенда ссылки на api прописаны жестко,
+но увидеть работу балансировщика можно по следующим url:
+- <SERVER>
+- <SERVER>/admin/
+- <SERVER>/api/v1/lib/
+
+Сборка образов и запуск docker-compose осуществлял через:
+```
+docker-compose up --build
+```
+
 # Критерий оценки финального задания
 1. Dockerfile должны быть написаны согласно пройденным best practices
 2. Для docker-compose необходимо использовать локальное image registry
