@@ -50,7 +50,7 @@ docker exec testback01 python manage.py migrate
 docker exec -it testback01 python manage.py createsuperuser
 ```
 
-Админка будет доступна по адресу <SERVER>:8000
+Админка будет доступна по адресу $SERVER:8000
 
 # 3 Лекция
 Написать docker-compose.yaml, для всего проекта, собрать и запустить
@@ -59,9 +59,9 @@ docker exec -it testback01 python manage.py createsuperuser
 Создал environment.env и docker-compose.yaml, в котором реализована 
 сборка образов. В проекте фронтенда ссылки на api прописаны жестко,
 но увидеть работу балансировщика можно по следующим url:
-- <SERVER>
-- <SERVER>/admin/
-- <SERVER>/api/v1/lib/
+- $SERVER
+- $SERVER/admin/
+- $SERVER/api/v1/lib/
 
 Сборка образов и запуск docker-compose осуществлял через:
 ```
