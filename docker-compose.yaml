@@ -22,8 +22,10 @@ services:
 
   frontend:
     build:
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.node
       context: ./frontend
+    tty:
+      true
     networks:
       - front-net
     labels:

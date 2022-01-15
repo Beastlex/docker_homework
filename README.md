@@ -57,11 +57,7 @@ docker exec -it testback01 python manage.py createsuperuser
 
 # Решение:
 Создал environment.env и docker-compose.yaml, в котором реализована 
-сборка образов. В проекте фронтенда ссылки на api прописаны жестко,
-но увидеть работу балансировщика можно по следующим url:
-- $SERVER
-- $SERVER/admin/
-- $SERVER/api/v1/lib/
+сборка образов. Окончательное приложение работает на 80 порту. 
 
 Сборка образов и запуск docker-compose осуществлял через:
 ```
